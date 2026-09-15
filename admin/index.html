@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文章管理｜粹學文理補習班後台</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<header class="admin-header">
+  <div class="brand">粹學文理補習班｜後台</div>
+  <div style="display:flex;gap:10px;align-items:center">
+    <span id="whoami" style="font-size:13px;opacity:.8"></span>
+    <button id="logout-btn">登出</button>
+  </div>
+</header>
+
+<div class="admin-wrap">
+  <div class="admin-toolbar">
+    <h2>文章管理</h2>
+    <a class="btn" href="editor.html">＋ 新增文章</a>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>標題</th>
+        <th>分類</th>
+        <th>日期</th>
+        <th>狀態</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="article-rows">
+      <tr><td colspan="5" class="empty-state">載入中…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

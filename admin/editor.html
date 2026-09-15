@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>編輯文章｜粹學文理補習班後台</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<header class="admin-header">
+  <div class="brand">粹學文理補習班｜後台</div>
+  <a href="index.html">← 返回文章列表</a>
+</header>
+
+<div class="admin-wrap">
+  <h2 id="editor-title" style="margin-bottom:20px">新增文章</h2>
+  <div class="error-msg" id="editor-error"></div>
+
+  <form id="editor-form">
+    <div class="field">
+      <label for="f-title">標題</label>
+      <input id="f-title" required>
+    </div>
+    <div class="field">
+      <label for="f-category">分類</label>
+      <select id="f-category">
+        <option value="news">最新消息</option>
+        <option value="private">私中升學專欄</option>
+        <option value="study">學習園地</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="f-date">發布日期</label>
+      <input id="f-date" type="date" required>
+    </div>
+    <div class="field">
+      <label for="f-excerpt">摘要（顯示在列表頁）</label>
+      <input id="f-excerpt">
+    </div>
+    <div class="field">
+      <label for="f-content">內文（支援 Markdown：空行分段、# 標題、**粗體**、[連結文字](網址)）</label>
+      <textarea id="f-content"></textarea>
+      <div class="hint">儲存後會自動轉換成網頁排版，可以直接用一般段落方式書寫。</div>
+    </div>
+    <div class="field field-inline">
+      <input id="f-published" type="checkbox">
+      <label for="f-published" style="margin:0">立即發布（取消勾選則存為草稿，不會顯示在官網上）</label>
+    </div>
+
+    <div class="editor-actions">
+      <button type="submit" class="btn">儲存文章</button>
+      <a href="index.html" class="btn btn-outline">取消</a>
+    </div>
+  </form>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/editor.js"></script>
+</body>
+</html>

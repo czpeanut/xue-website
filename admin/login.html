@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>後台登入｜粹學文理補習班</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+<div class="login-page">
+  <form class="login-box" id="login-form">
+    <h1>粹學文理補習班</h1>
+    <div class="sub">文章管理後台</div>
+    <div class="error-msg" id="login-error"></div>
+    <div class="field">
+      <label for="username">帳號</label>
+      <input id="username" name="username" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label for="password">密碼</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+    </div>
+    <button type="submit" class="btn" style="width:100%">登入</button>
+  </form>
+</div>
+<script>
+  document.getElementById('login-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var errorEl = document.getElementById('login-error');
+    errorEl.textContent = '';
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+    fetch('/api/login', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: username, password: password }),
+    })
+      .then(function (res) {
+        return res.json().then(function (data) {
+          if (!res.ok) throw new Error(data.error || '登入失敗');
+          return data;
+        });
+      })
+      .then(function () {
+        window.location.href = 'index.html';
+      })
+      .catch(function (err) {
+        errorEl.textContent = err.message || '登入失敗';
+      });
+  });
+</script>
+</body>
+</html>
