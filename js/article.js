@@ -1,4 +1,4 @@
-// 文章內頁：依網址 ?slug= 讀取單篇文章內容
+// 文章內頁：依網址 ?slug= 從 Supabase 讀取單篇文章內容
 (function () {
   var container = document.getElementById('article-container');
   if (!container) return;
@@ -17,13 +17,20 @@
     return;
   }
 
-  fetch('/api/articles/' + encodeURIComponent(slug))
+  window.db
+    .from('articles')
+    .select('title, date, content_html')
+    .eq('slug', slug)
+    .eq('published', true)
+    .maybeSingle()
     .then(function (res) {
-      if (!res.ok) throw new Error('not found');
-      return res.json();
-    })
-    .then(function (article) {
+      if (res.error || !res.data) {
+        container.innerHTML = '<div class="empty-state">找不到這篇文章，可能已被下架或網址有誤。</div>';
+        return;
+      }
+      var article = res.data;
       document.title = article.title + '｜粹學文理補習班';
+      var safeHtml = window.DOMPurify ? window.DOMPurify.sanitize(article.content_html) : escapeHtml(article.content_html);
       container.innerHTML =
         '<h1>' +
         escapeHtml(article.title) +
@@ -32,7 +39,7 @@
         (article.date || '').replace(/-/g, '.') +
         '</div>' +
         '<div class="article-content">' +
-        article.contentHtml +
+        safeHtml +
         '</div>';
     })
     .catch(function () {

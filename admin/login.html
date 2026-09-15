@@ -14,8 +14,8 @@
     <div class="sub">文章管理後台</div>
     <div class="error-msg" id="login-error"></div>
     <div class="field">
-      <label for="username">帳號</label>
-      <input id="username" name="username" autocomplete="username" required>
+      <label for="email">Email 帳號</label>
+      <input id="email" name="email" type="email" autocomplete="username" required>
     </div>
     <div class="field">
       <label for="password">密碼</label>
@@ -24,30 +24,32 @@
     <button type="submit" class="btn" style="width:100%">登入</button>
   </form>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="../js/supabase-config.js"></script>
+<script src="../js/supabase-client.js"></script>
 <script>
+  // 已經登入的話直接進後台，不用再看登入頁
+  window.db.auth.getSession().then(function (res) {
+    if (res.data.session) window.location.href = 'index.html';
+  });
+
   document.getElementById('login-form').addEventListener('submit', function (e) {
     e.preventDefault();
     var errorEl = document.getElementById('login-error');
     errorEl.textContent = '';
-    var username = document.getElementById('username').value;
+    var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
-    fetch('/api/login', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: username, password: password }),
-    })
+    window.db.auth
+      .signInWithPassword({ email: email, password: password })
       .then(function (res) {
-        return res.json().then(function (data) {
-          if (!res.ok) throw new Error(data.error || '登入失敗');
-          return data;
-        });
-      })
-      .then(function () {
+        if (res.error) {
+          errorEl.textContent = res.error.message === 'Invalid login credentials' ? '帳號或密碼錯誤' : res.error.message;
+          return;
+        }
         window.location.href = 'index.html';
       })
       .catch(function (err) {
-        errorEl.textContent = err.message || '登入失敗';
+        errorEl.textContent = '無法連線到伺服器，請確認網路連線或稍後再試。';
       });
   });
 </script>

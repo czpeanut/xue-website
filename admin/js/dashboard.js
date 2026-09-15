@@ -8,14 +8,6 @@
     return div.innerHTML;
   }
 
-  function loadMe() {
-    AdminAPI.get('/api/me').then(function (data) {
-      if (data.loggedIn) {
-        document.getElementById('whoami').textContent = '登入身分：' + data.username;
-      }
-    });
-  }
-
   function renderRows(articles) {
     if (!articles.length) {
       rowsEl.innerHTML = '<tr><td colspan="5" class="empty-state">尚未建立任何文章</td></tr>';
@@ -43,27 +35,45 @@
     rowsEl.querySelectorAll('[data-del]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         if (!confirm('確定要刪除這篇文章嗎？此動作無法復原。')) return;
-        AdminAPI.del('/api/admin/articles/' + btn.getAttribute('data-del'))
-          .then(loadArticles)
-          .catch(function (err) { alert(err.message); });
+        window.db
+          .from('articles')
+          .delete()
+          .eq('id', btn.getAttribute('data-del'))
+          .then(function (res) {
+            if (res.error) return alert(res.error.message);
+            loadArticles();
+          })
+          .catch(function (err) {
+            alert(err.message || String(err));
+          });
       });
     });
   }
 
   function loadArticles() {
-    AdminAPI.get('/api/admin/articles')
-      .then(renderRows)
+    window.db
+      .from('articles')
+      .select('id, title, category, date, published')
+      .order('date', { ascending: false })
+      .then(function (res) {
+        if (res.error) throw res.error;
+        renderRows(res.data);
+      })
       .catch(function (err) {
-        rowsEl.innerHTML = '<tr><td colspan="5" class="empty-state">載入失敗：' + escapeHtml(err.message) + '</td></tr>';
+        rowsEl.innerHTML = '<tr><td colspan="5" class="empty-state">載入失敗：' + escapeHtml(err.message || String(err)) + '</td></tr>';
       });
   }
 
   document.getElementById('logout-btn').addEventListener('click', function () {
-    AdminAPI.post('/api/logout').then(function () {
+    window.db.auth.signOut().then(function () {
       window.location.href = 'login.html';
     });
   });
 
-  loadMe();
-  loadArticles();
+  window.AdminAuth.ready
+    .then(function (session) {
+      document.getElementById('whoami').textContent = '登入身分：' + session.user.email;
+      loadArticles();
+    })
+    .catch(function () {});
 })();

@@ -1,4 +1,4 @@
-// 首頁最新消息預覽（取最新 3 篇）
+// 首頁最新消息預覽（取最新 3 篇已發布文章）
 (function () {
   var el = document.getElementById('home-news-preview');
   if (!el) return;
@@ -9,15 +9,19 @@
     return div.innerHTML;
   }
 
-  fetch('/api/articles')
-    .then(function (res) { return res.json(); })
-    .then(function (articles) {
-      var top = articles.slice(0, 3);
-      if (!top.length) {
+  window.db
+    .from('articles')
+    .select('slug, title, excerpt, date')
+    .eq('published', true)
+    .order('date', { ascending: false })
+    .limit(3)
+    .then(function (res) {
+      if (res.error) throw res.error;
+      if (!res.data.length) {
         el.innerHTML = '<div class="empty-state">目前尚無最新消息。</div>';
         return;
       }
-      el.innerHTML = top
+      el.innerHTML = res.data
         .map(function (a) {
           return (
             '<a class="card card-link" href="article.html?slug=' +
