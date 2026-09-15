@@ -29,7 +29,7 @@
         return;
       }
       var article = res.data;
-      document.title = article.title + '｜粹學文理補習班';
+      document.title = article.title + '｜粹學文理';
       var safeHtml = window.DOMPurify ? window.DOMPurify.sanitize(article.content_html) : escapeHtml(article.content_html);
       container.innerHTML =
         '<h1>' +

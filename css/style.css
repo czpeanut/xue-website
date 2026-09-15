@@ -220,6 +220,16 @@ img { max-width: 100%; display: block; }
 }
 .hero-photo { --mark-color: var(--color-gold-light); }
 
+.hero-photo img,
+.about-photo img,
+.teacher-photo img,
+.branch-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 @media (max-width: 760px) {
   .hero .wrap { grid-template-columns: 1fr; padding: 48px 24px; }
   .hero h1 { font-size: 32px; }
@@ -317,6 +327,9 @@ img { max-width: 100%; display: block; }
 .about-story { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; }
 .about-photo { position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--color-border); background: var(--color-bg-alt) center / cover; display: flex; align-items: center; justify-content: center; color: rgba(29, 31, 32, 0.35); font-size: 13px; }
 @media (max-width: 760px) { .about-story { grid-template-columns: 1fr; } }
+
+.gallery-item { aspect-ratio: 4 / 3; border: 1px solid var(--color-border); overflow: hidden; }
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 .value-card { background: var(--color-bg); border: 1px solid var(--color-border-light); padding: 26px; }
 .value-card span { font-size: 11px; letter-spacing: 0.1em; color: var(--color-gold-dark); }
